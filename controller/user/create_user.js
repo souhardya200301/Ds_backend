@@ -1,10 +1,30 @@
 const User = require("../../model/user.model");
 
 const create_user = async (req, res) => {
+
   try {
-    console.log(req.body);
+
     const { email, name, password, role } = req.body;
 
+    let user_role = role 
+
+    const auth_user = req.user;
+
+    if(user_role == 'admin' && !auth_user){
+      return res.status(401).json({ message: "No admin can't create admin" });
+    }
+
+    if(user_role == 'admin' && auth_user && auth_user.role != "admin"){
+      return res.status(401).json({ message: "No admin can't create admin" });
+    }
+
+  
+
+    // if(!auth_user || auth_user.role != "admin"){
+    //   user_role = 'student'
+    // } 
+
+ 
     /**
      *
      */
@@ -18,7 +38,7 @@ const create_user = async (req, res) => {
       return res.status(409).json({ message: "User already exists" });
     }
 
-    const newUser = new User({ email, name, password, role });
+    const newUser = new User({ email, name, password, role : user_role });
 
     let f_user = await newUser.save();
 
@@ -28,7 +48,7 @@ const create_user = async (req, res) => {
 
     return res
       .status(201)
-      .json({ message: "User created successfully", user: f_user });
+      .json({ message: "User created successfully! " , user: f_user });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

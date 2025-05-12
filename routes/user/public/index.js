@@ -1,8 +1,12 @@
 const app = require("express");
-const create_user = require("../../../controller/user/create_user");
+ 
+const login = require("../../../controller/user/login_user");
 
 const route = app.Router();
 
-route.post("/create-user", create_user);
+
+
+route.post("/login",  login);
+
 
 module.exports = route;

@@ -2,16 +2,23 @@
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db.connect");
-const { json } = require("express");
+const passport = require("./middleware/passport.middleware");
+ 
+const dotenv = require("dotenv");
+const path = require("path");
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+console.log("Environment variables loaded successfully.");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 connectDB();
 
 // Enable CORS for all routes
+
+app.use(passport.initialize());
 app.use(cors());
-app.use(json());
+app.use(express.json());
 
 // Sample route
 app.get("/", (req, res) => {

@@ -1,8 +1,12 @@
 const app = require("express")
+ 
 
 const route = app.Router()
 
-route.use("/user/public", require("./public") )
-route.use("/user/private", require("./private") )
+route.use("/public", require("./public") )
+
+
+ 
+route.use("/private", require("./private") )
 
 module.exports = route

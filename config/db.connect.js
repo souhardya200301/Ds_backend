@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const connectDB = () => {
   try {
     mongoose
-      .connect("", {
+      .connect(process.env.MONGO_URI, {
         authSource: "admin",
       })
       .then((conn) => {

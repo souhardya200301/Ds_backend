@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema(
   {
@@ -50,6 +51,26 @@ userSchema.pre("save", function (next) {
     next(e);
   }
 });
+
+userSchema.methods.check_password = function (password) {
+  try {
+    return bcrypt.compareSync(password, this.password);
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
+userSchema.methods.generateToken = function () {
+  try {
+    const token = jwt.sign({ id: this._id, role: this.role }, process.env.JWT_SECRECT, { expiresIn: process.env.JWT_EXPIRES_IN });
+    return "Bearer " + token;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
 
 const User = mongoose.model("User", userSchema, "users");
 
